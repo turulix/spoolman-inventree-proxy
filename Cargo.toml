@@ -2,5 +2,6 @@
 resolver = "3"
 
 members = [
+    "crates/inventree",
     "crates/spoolman-api"
 ]
