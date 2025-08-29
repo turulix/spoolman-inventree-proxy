@@ -18,7 +18,8 @@ pub fn configure_router(cfg: &mut ServiceConfig) {
             .service(health_route)
             .service(backup_route)
             .configure(filament::configure_router)
-            .configure(spool::configure_router),
+            .configure(spool::configure_router)
+            .configure(vendor::configure_router),
     );
 }
 

@@ -1,11 +1,26 @@
 mod routes;
+mod utils;
+mod context;
 
-use std::fs;
-use actix_web::{App, HttpServer};
-use std::net::{Ipv4Addr, Ipv6Addr, SocketAddr};
+use actix_web::dev::{ServiceRequest, ServiceResponse};
+use actix_web::{App, Error, HttpResponse, HttpServer};
 use log::{info, warn};
+use std::fs;
+use std::net::{Ipv4Addr, Ipv6Addr, SocketAddr};
+use actix_web::web::Data;
 use utoipa_actix_web::AppExt;
 use utoipa_swagger_ui::SwaggerUi;
+use inventree::InventreeApiClient;
+use settings::SETTINGS;
+use crate::context::Context;
+
+async fn default_service(req: ServiceRequest) -> Result<ServiceResponse, Error> {
+    dbg!(&req);
+    warn!("A unhandled request was made to: {} {}", req.method(), req.uri());
+
+    Err(actix_web::error::ErrorNotFound("Not Found"))
+}
+
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -13,9 +28,18 @@ async fn main() -> anyhow::Result<()> {
 
     info!("Starting Spoolman API Proxy Server...");
 
+    // Force load settings at startup
+    let _ = SETTINGS.clone();
+    let inv_client = InventreeApiClient::new(&SETTINGS.inventree_url, &SETTINGS.inventree_token);
+    let context = Context{
+        inv: inv_client,
+    };
+    
     HttpServer::new(move || {
         let (app, api) = App::new()
+            .app_data(Data::new(context.clone()))
             .into_utoipa_app()
+            .default_service(default_service)
             .configure(routes::configure_router)
             .split_for_parts();
 
