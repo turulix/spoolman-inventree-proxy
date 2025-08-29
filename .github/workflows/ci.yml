@@ -1,0 +1,79 @@
+name: CI
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  CI: true
+  RUST_BACKTRACE: 1
+  CARGO_TERM_COLOR: always
+
+jobs:
+  rust-fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: Cache rust toolchain and dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/
+          key: ${{ runner.os }}-rust-fmt-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-rust-fmt-
+
+      - name: Run Rust Format Check
+        run: cargo fmt --all -- --check
+
+  rust-test:
+    needs: rust-fmt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/
+            target/
+          key: ${{ runner.os }}-rust-test-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-rust-test-
+
+      - name: cargo test
+        run: |
+          cargo test --no-fail-fast --color always
+
+  rust-clippy:
+    needs: rust-fmt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/
+            target/
+          key: ${{ runner.os }}-rust-clippy-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-rust-clippy
+
+      - name: cargo clippy
+        run: cargo clippy --all --color always --no-deps --all-targets -- -D warnings
