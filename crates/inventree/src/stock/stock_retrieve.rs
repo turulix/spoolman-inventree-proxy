@@ -26,7 +26,7 @@ impl StockRepository {
     ) -> Result<InventreeStockItem, anyhow::Error> {
         let res: InventreeStockItem = self
             .0
-            .get_request(&format!("stock/{}/", stock_part_id.0), &query)
+            .get_request(&format!("stock/{}/", stock_part_id.0), query)
             .await?;
         Ok(res)
     }

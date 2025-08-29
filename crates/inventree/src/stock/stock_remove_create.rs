@@ -12,7 +12,7 @@ pub struct RemoveCreateInner {
     pub pk: StockItemId,
     /// API DOCS:
     /// This value is:
-    /// 
+    ///
     /// string <decimal> ^-?\d{0,10}(?:\.\d{0,5})?$
     pub quantity: String,
 }

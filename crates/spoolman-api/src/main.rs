@@ -1,26 +1,29 @@
+mod context;
 mod routes;
 mod utils;
-mod context;
 
+use crate::context::Context;
 use actix_web::dev::{ServiceRequest, ServiceResponse};
-use actix_web::{App, Error, HttpResponse, HttpServer};
+use actix_web::web::Data;
+use actix_web::{App, Error, HttpServer};
+use inventree::InventreeApiClient;
 use log::{info, warn};
+use settings::SETTINGS;
 use std::fs;
 use std::net::{Ipv4Addr, Ipv6Addr, SocketAddr};
-use actix_web::web::Data;
 use utoipa_actix_web::AppExt;
 use utoipa_swagger_ui::SwaggerUi;
-use inventree::InventreeApiClient;
-use settings::SETTINGS;
-use crate::context::Context;
 
 async fn default_service(req: ServiceRequest) -> Result<ServiceResponse, Error> {
     dbg!(&req);
-    warn!("A unhandled request was made to: {} {}", req.method(), req.uri());
+    warn!(
+        "A unhandled request was made to: {} {}",
+        req.method(),
+        req.uri()
+    );
 
     Err(actix_web::error::ErrorNotFound("Not Found"))
 }
-
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -31,10 +34,8 @@ async fn main() -> anyhow::Result<()> {
     // Force load settings at startup
     let _ = SETTINGS.clone();
     let inv_client = InventreeApiClient::new(&SETTINGS.inventree_url, &SETTINGS.inventree_token);
-    let context = Context{
-        inv: inv_client,
-    };
-    
+    let context = Context { inv: inv_client };
+
     HttpServer::new(move || {
         let (app, api) = App::new()
             .app_data(Data::new(context.clone()))

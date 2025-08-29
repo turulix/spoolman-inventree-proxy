@@ -1,14 +1,14 @@
 use crate::context::Context;
-use crate::routes::spool::Spool;
 use crate::routes::ApiResult;
+use crate::routes::spool::Spool;
 use actix_web::rt::spawn;
 use actix_web::web::Data;
-use actix_web::{get, web, HttpRequest, HttpResponse};
+use actix_web::{HttpRequest, HttpResponse, get, web};
 use actix_ws::Message;
 use futures_util::StreamExt;
-use log::debug;
 use inventree::part::PartListQuery;
 use inventree::stock::StockListQuery;
+use log::debug;
 use settings::SETTINGS;
 
 #[utoipa::path(
@@ -26,7 +26,7 @@ async fn find_spool_route(
     let is_websocket = req
         .headers()
         .get("upgrade")
-        .map_or(false, |h| h == "websocket");
+        .is_some_and(|h| h == "websocket");
 
     if is_websocket {
         let (response, mut session, mut msg_stream) = actix_ws::handle(&req, body)?;
@@ -60,7 +60,6 @@ async fn find_spool_route(
             category: Some(SETTINGS.category_id),
             supplier_part_detail: Some(true),
             location_detail: Some(true),
-            ..Default::default()
         }))
         .await
         .unwrap();
@@ -71,7 +70,6 @@ async fn find_spool_route(
         .list(&Some(PartListQuery {
             category: Some(SETTINGS.category_id),
             parameters: Some(true),
-            ..Default::default()
         }))
         .await
         .unwrap();

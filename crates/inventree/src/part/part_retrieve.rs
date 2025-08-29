@@ -22,7 +22,7 @@ impl PartRepository {
     ) -> anyhow::Result<InventreePart> {
         let res = self
             .0
-            .get_request(&format!("part/{}/", part_id.0), &query)
+            .get_request(&format!("part/{}/", part_id.0), query)
             .await?;
         Ok(res)
     }

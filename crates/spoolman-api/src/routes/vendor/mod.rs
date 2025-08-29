@@ -1,8 +1,8 @@
 mod find_vendor;
 
+use crate::routes::vendor::find_vendor::find_vendor_route;
 use chrono::DateTime;
 use utoipa_actix_web::service_config::ServiceConfig;
-use crate::routes::vendor::find_vendor::find_vendor_route;
 
 pub fn configure_router(cfg: &mut ServiceConfig) {
     cfg.service(find_vendor_route);

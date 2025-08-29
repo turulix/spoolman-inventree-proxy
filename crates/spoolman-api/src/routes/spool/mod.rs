@@ -93,8 +93,7 @@ impl Spool {
                 material: Some(filament_material),
                 price: stock
                     .purchase_price
-                    .map(|x| initial_weight.map(|y| x * y))
-                    .flatten(),
+                    .and_then(|x| initial_weight.map(|y| x * y)),
                 density,
                 diameter,
                 weight: initial_weight,

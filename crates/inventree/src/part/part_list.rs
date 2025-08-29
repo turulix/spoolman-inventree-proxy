@@ -9,7 +9,7 @@ pub struct PartListQuery {
 
 impl PartRepository {
     pub async fn list(&self, query: &Option<PartListQuery>) -> anyhow::Result<Vec<InventreePart>> {
-        let res = self.0.get_request("part/", &query).await?;
+        let res = self.0.get_request("part/", query).await?;
         Ok(res)
     }
 }

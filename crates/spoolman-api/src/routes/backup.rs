@@ -1,5 +1,5 @@
 use crate::routes::ApiResult;
-use actix_web::{get, post};
+use actix_web::post;
 use actix_web::web::Json;
 use serde::Serialize;
 use utoipa::ToSchema;

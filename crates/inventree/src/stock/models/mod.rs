@@ -62,7 +62,7 @@ pub(crate) mod yyyy_mm_dd_hh_mm_format {
     use chrono::{DateTime, NaiveDateTime, Utc};
     use serde::{self, Deserialize, Deserializer, Serializer};
 
-    const FORMAT: &'static str = "%Y-%m-%d %H:%M";
+    const FORMAT: &str = "%Y-%m-%d %H:%M";
 
     // The signature of a serialize_with function must follow the pattern:
     //
@@ -71,6 +71,7 @@ pub(crate) mod yyyy_mm_dd_hh_mm_format {
     //        S: Serializer
     //
     // although it may also be generic over the input types T.
+    #[allow(dead_code)]
     pub fn serialize<S>(date: &DateTime<Utc>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,

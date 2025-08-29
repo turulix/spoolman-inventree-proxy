@@ -5,7 +5,7 @@ use serde::Serialize;
 use utoipa::ToSchema;
 use utoipa_actix_web::service_config::ServiceConfig;
 
-pub fn configure_router(cfg: &mut ServiceConfig) {
+pub fn configure_router(_cfg: &mut ServiceConfig) {
     //cfg.service(find_filament_route);
 }
 

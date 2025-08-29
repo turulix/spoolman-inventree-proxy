@@ -9,7 +9,10 @@ pub struct StockListQuery {
 }
 
 impl StockRepository {
-    pub async fn list(&self, query: &Option<StockListQuery>) -> Result<Vec<InventreeStockItem>, anyhow::Error> {
+    pub async fn list(
+        &self,
+        query: &Option<StockListQuery>,
+    ) -> Result<Vec<InventreeStockItem>, anyhow::Error> {
         let res: Vec<InventreeStockItem> = self.0.get_request("stock/", query).await?;
         Ok(res)
     }

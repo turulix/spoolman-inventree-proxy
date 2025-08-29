@@ -1,8 +1,8 @@
 use crate::context::Context;
-use crate::routes::spool::Spool;
 use crate::routes::ApiResult;
+use crate::routes::spool::Spool;
 use actix_web::web::{Data, Json};
-use actix_web::{get, web, HttpRequest};
+use actix_web::{get, web};
 use inventree::stock::StockItemId;
 use serde::Deserialize;
 use utoipa::IntoParams;

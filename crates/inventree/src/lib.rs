@@ -2,8 +2,8 @@ use crate::part::PartRepository;
 use log::{debug, trace};
 use reqwest::header::{HeaderMap, HeaderValue};
 use reqwest::{Client, ClientBuilder};
-use serde::de::DeserializeOwned;
 use serde::Serialize;
+use serde::de::DeserializeOwned;
 use std::fmt::Debug;
 use stock::StockRepository;
 
@@ -15,7 +15,6 @@ pub mod supplier;
 #[derive(Clone)]
 pub struct InventreeApiClient {
     base_url: String,
-    api_key: String,
     client: Client,
 }
 
@@ -30,9 +29,8 @@ impl InventreeApiClient {
             base_url: base_url
                 .to_string()
                 .strip_suffix("/")
-                .unwrap_or(&base_url)
+                .unwrap_or(base_url)
                 .to_string(),
-            api_key: api_key.to_string(),
             client: ClientBuilder::new()
                 .default_headers(header_map)
                 .build()
