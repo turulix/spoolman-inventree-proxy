@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE pending_spool_usage SET pending_weight = 0 WHERE spool_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "5503a2a17b5780c5f8c5c5f8919c107cfffb1813fcb9a8b299840a0d123182c7"
+}

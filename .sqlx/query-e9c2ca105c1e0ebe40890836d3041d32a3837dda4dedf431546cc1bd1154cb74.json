@@ -1,0 +1,32 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT spool_id, pending_weight, last_updated_at as 'last_updated_at: chrono::DateTime<Utc>' FROM pending_spool_usage WHERE pending_weight > 0",
+  "describe": {
+    "columns": [
+      {
+        "name": "spool_id",
+        "ordinal": 0,
+        "type_info": "Integer"
+      },
+      {
+        "name": "pending_weight",
+        "ordinal": 1,
+        "type_info": "Float"
+      },
+      {
+        "name": "last_updated_at: chrono::DateTime<Utc>",
+        "ordinal": 2,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "e9c2ca105c1e0ebe40890836d3041d32a3837dda4dedf431546cc1bd1154cb74"
+}

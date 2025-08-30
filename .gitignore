@@ -1,3 +1,4 @@
 /target
 .idea
 settings.json
+proxy_data.db*

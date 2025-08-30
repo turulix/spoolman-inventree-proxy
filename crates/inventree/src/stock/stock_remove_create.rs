@@ -21,7 +21,7 @@ pub struct RemoveCreateInner {
 struct RemoveCreateQuery;
 
 impl StockRepository {
-    pub async fn remove_create(&self, body: &RemoveCreateBody) -> anyhow::Result<RemoveCreateBody> {
+    pub async fn remove_create(&self, body: &RemoveCreateBody) -> anyhow::Result<serde_json::Value> {
         let res = self
             .0
             .post_request("stock/remove/", &body, &Some(RemoveCreateQuery))

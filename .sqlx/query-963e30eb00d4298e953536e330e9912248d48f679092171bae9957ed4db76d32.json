@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            INSERT INTO pending_spool_usage (spool_id, pending_weight, last_updated_at)\n            VALUES (?, ?, ?)\n            ON CONFLICT DO UPDATE SET pending_weight  = pending_weight + EXCLUDED.pending_weight,\n                          last_updated_at = EXCLUDED.last_updated_at;\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "963e30eb00d4298e953536e330e9912248d48f679092171bae9957ed4db76d32"
+}

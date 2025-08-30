@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "DELETE FROM pending_spool_usage WHERE spool_id=?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "e3eac25bd3c2471ba035b4d051a543a869e057436ebe9f8d10c07cee1b2c2e9e"
+}

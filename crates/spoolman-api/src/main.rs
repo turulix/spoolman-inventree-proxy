@@ -1,6 +1,8 @@
 mod context;
+mod db;
 mod routes;
 mod utils;
+mod cron;
 
 use crate::context::Context;
 use actix_web::dev::{ServiceRequest, ServiceResponse};
@@ -13,6 +15,7 @@ use std::fs;
 use std::net::{Ipv4Addr, Ipv6Addr, SocketAddr};
 use utoipa_actix_web::AppExt;
 use utoipa_swagger_ui::SwaggerUi;
+use crate::cron::flush_pending_task::start_flushing_job;
 
 async fn default_service(req: ServiceRequest) -> Result<ServiceResponse, Error> {
     dbg!(&req);
@@ -34,7 +37,12 @@ async fn main() -> anyhow::Result<()> {
     // Force load settings at startup
     let _ = SETTINGS.clone();
     let inv_client = InventreeApiClient::new(&SETTINGS.inventree_url, &SETTINGS.inventree_token);
-    let context = Context { inv: inv_client };
+    let context = Context {
+        inv: inv_client,
+        db: db::DbClient::new(&SETTINGS.sqlite_db_path).await,
+    };
+    
+    start_flushing_job(context.clone());
 
     HttpServer::new(move || {
         let (app, api) = App::new()

@@ -4,7 +4,7 @@ use crate::supplier::{SupplierPartDetails, SupplierPartId};
 use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[derive(Deserialize, Serialize, Debug, Clone, Copy)]
 #[serde(transparent)]
 pub struct StockItemId(pub u64);
 

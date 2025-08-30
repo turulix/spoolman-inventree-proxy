@@ -115,7 +115,7 @@ impl Spool {
             used_weight,
             remaining_length: initial_length.map(|x| x - used_length),
             used_length,
-            location: stock.location_detail.map(|x| x.name),
+            location: stock.location_detail.map(|x| x.pathstring),
             lot_nr: stock.batch,
             archived: !part.active,
             extra: Default::default(),

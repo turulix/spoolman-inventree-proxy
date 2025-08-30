@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            SELECT pending_weight FROM pending_spool_usage WHERE spool_id = ?;\n        ",
+  "describe": {
+    "columns": [
+      {
+        "name": "pending_weight",
+        "ordinal": 0,
+        "type_info": "Float"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "04c9ecde1a1bedd50b0ce19f9abb1b1a82b7ec40046fdc7e1ae932ba387a83d8"
+}

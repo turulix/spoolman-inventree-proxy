@@ -1,15 +1,17 @@
 use crate::context::Context;
-use crate::routes::ApiResult;
 use crate::routes::spool::Spool;
+use crate::routes::ApiResult;
 use actix_web::rt::spawn;
 use actix_web::web::Data;
-use actix_web::{HttpRequest, HttpResponse, get, web};
+use actix_web::{get, web, HttpRequest, HttpResponse};
 use actix_ws::Message;
+use anyhow::anyhow;
 use futures_util::StreamExt;
 use inventree::part::PartListQuery;
 use inventree::stock::StockListQuery;
 use log::debug;
 use settings::SETTINGS;
+use sqlx::Connection;
 
 #[utoipa::path(
     tags = ["Spool"],
@@ -29,7 +31,8 @@ async fn find_spool_route(
         .is_some_and(|h| h == "websocket");
 
     if is_websocket {
-        let (response, mut session, mut msg_stream) = actix_ws::handle(&req, body)?;
+        let (response, mut session, mut msg_stream) = actix_ws::handle(&req, body)
+            .map_err(|e| anyhow!("WebSocket handshake error: {e:?}"))?;
 
         spawn(async move {
             while let Some(Ok(msg)) = msg_stream.next().await {
@@ -53,7 +56,7 @@ async fn find_spool_route(
         return Ok(response);
     }
 
-    let stockitems = ctx
+    let mut stockitems = ctx
         .inv
         .stock()
         .list(&Some(StockListQuery {
@@ -61,8 +64,17 @@ async fn find_spool_route(
             supplier_part_detail: Some(true),
             location_detail: Some(true),
         }))
-        .await
-        .unwrap();
+        .await?;
+
+    // Adjust quantities based on pending spool usage
+    let mut conn = ctx.db.begin().await?;
+    for si in stockitems.iter_mut() {
+        let pending = ctx.db.select_pending_spool_usage(&mut conn, si.pk).await?;
+        if let Some(x) = pending {
+            si.quantity = (si.quantity - x).max(0.0);
+        }
+    }
+    drop(conn);
 
     let parts = ctx
         .inv
@@ -71,8 +83,7 @@ async fn find_spool_route(
             category: Some(SETTINGS.category_id),
             parameters: Some(true),
         }))
-        .await
-        .unwrap();
+        .await?;
 
     let spools = stockitems
         .into_iter()
