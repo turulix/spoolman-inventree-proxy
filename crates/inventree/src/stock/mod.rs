@@ -1,8 +1,8 @@
 mod models;
+mod stock_exists;
 mod stock_list;
 mod stock_remove_create;
 mod stock_retrieve;
-mod stock_exists;
 
 pub use models::*;
 pub use stock_list::*;

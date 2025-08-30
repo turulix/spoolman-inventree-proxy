@@ -1,6 +1,6 @@
 mod update_pending;
 
-use sqlx::{Connection, SqlitePool};
+use sqlx::SqlitePool;
 
 #[derive(Clone)]
 pub struct DbClient {

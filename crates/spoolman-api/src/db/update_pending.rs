@@ -1,6 +1,6 @@
 use crate::db::DbClient;
 use inventree::stock::StockItemId;
-use sqlx::{query, SqliteConnection};
+use sqlx::{SqliteConnection, query};
 
 impl DbClient {
     pub async fn update_pending_spool_usage(

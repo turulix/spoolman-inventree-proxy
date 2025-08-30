@@ -8,9 +8,9 @@ mod vendor;
 use crate::routes::backup::backup_route;
 use crate::routes::health::health_route;
 use crate::routes::info::info_route;
+use actix_web::HttpResponse;
 use actix_web::body::BoxBody;
 use actix_web::http::StatusCode;
-use actix_web::HttpResponse;
 use anyhow::Error;
 use serde::Serialize;
 use std::fmt::{Debug, Display, Formatter};
@@ -46,6 +46,7 @@ impl ApiError {
         }
     }
 
+    #[allow(dead_code)]
     pub fn not_found<T: ToString>(message: T) -> Self {
         ApiError {
             status_code: StatusCode::NOT_FOUND,

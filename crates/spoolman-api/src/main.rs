@@ -1,10 +1,11 @@
 mod context;
+mod cron;
 mod db;
 mod routes;
 mod utils;
-mod cron;
 
 use crate::context::Context;
+use crate::cron::flush_pending_task::start_flushing_job;
 use actix_web::dev::{ServiceRequest, ServiceResponse};
 use actix_web::web::Data;
 use actix_web::{App, Error, HttpServer};
@@ -15,7 +16,6 @@ use std::fs;
 use std::net::{Ipv4Addr, Ipv6Addr, SocketAddr};
 use utoipa_actix_web::AppExt;
 use utoipa_swagger_ui::SwaggerUi;
-use crate::cron::flush_pending_task::start_flushing_job;
 
 async fn default_service(req: ServiceRequest) -> Result<ServiceResponse, Error> {
     dbg!(&req);
@@ -41,7 +41,7 @@ async fn main() -> anyhow::Result<()> {
         inv: inv_client,
         db: db::DbClient::new(&SETTINGS.sqlite_db_path).await,
     };
-    
+
     start_flushing_job(context.clone());
 
     HttpServer::new(move || {

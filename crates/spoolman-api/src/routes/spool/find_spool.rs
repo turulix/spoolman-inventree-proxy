@@ -1,9 +1,9 @@
 use crate::context::Context;
-use crate::routes::spool::Spool;
 use crate::routes::ApiResult;
+use crate::routes::spool::Spool;
 use actix_web::rt::spawn;
 use actix_web::web::Data;
-use actix_web::{get, web, HttpRequest, HttpResponse};
+use actix_web::{HttpRequest, HttpResponse, get, web};
 use actix_ws::Message;
 use anyhow::anyhow;
 use futures_util::StreamExt;
@@ -11,7 +11,6 @@ use inventree::part::PartListQuery;
 use inventree::stock::StockListQuery;
 use log::debug;
 use settings::SETTINGS;
-use sqlx::Connection;
 
 #[utoipa::path(
     tags = ["Spool"],
