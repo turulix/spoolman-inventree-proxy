@@ -1,6 +1,8 @@
 mod update_pending;
 
+use sqlx::sqlite::{SqliteAutoVacuum, SqliteConnectOptions};
 use sqlx::SqlitePool;
+use std::str::FromStr;
 
 #[derive(Clone)]
 pub struct DbClient {
@@ -8,9 +10,14 @@ pub struct DbClient {
 }
 
 impl DbClient {
-    pub async fn new(file_path: &str) -> Self {
+    pub async fn new(db_url: &str) -> Self {
+        let options = SqliteConnectOptions::from_str(db_url)
+            .unwrap()
+            .auto_vacuum(SqliteAutoVacuum::Incremental)
+            .create_if_missing(true);
+
         Self {
-            db: SqlitePool::connect(file_path).await.unwrap(),
+            db: SqlitePool::connect_with(options).await.unwrap(),
         }
     }
 
