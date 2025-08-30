@@ -12,6 +12,7 @@ use actix_web::{App, Error, HttpServer};
 use inventree::InventreeApiClient;
 use log::{info, warn};
 use settings::SETTINGS;
+use sqlx::SqliteConnection;
 use std::fs;
 use std::net::{Ipv4Addr, Ipv6Addr, SocketAddr};
 use utoipa_actix_web::AppExt;
@@ -36,10 +37,16 @@ async fn main() -> anyhow::Result<()> {
 
     // Force load settings at startup
     let _ = SETTINGS.clone();
+    let db = db::DbClient::new(&SETTINGS.sqlite_db_path).await;
+
+    sqlx::migrate!("../../migrations")
+        .run(&mut db.acquire().await? as &mut SqliteConnection)
+        .await?;
+
     let inv_client = InventreeApiClient::new(&SETTINGS.inventree_url, &SETTINGS.inventree_token);
     let context = Context {
         inv: inv_client,
-        db: db::DbClient::new(&SETTINGS.sqlite_db_path).await,
+        db,
     };
 
     start_flushing_job(context.clone());
