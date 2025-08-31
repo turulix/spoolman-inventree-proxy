@@ -4,13 +4,17 @@ use crate::routes::spool::Spool;
 use actix_web::rt::spawn;
 use actix_web::web::Data;
 use actix_web::{HttpRequest, HttpResponse, get, web};
-use actix_ws::Message;
+use actix_ws::{Message, Session};
 use anyhow::anyhow;
 use futures_util::StreamExt;
 use inventree::part::PartListQuery;
 use inventree::stock::StockListQuery;
 use log::debug;
 use settings::SETTINGS;
+use std::sync::LazyLock;
+use tokio::sync::Mutex;
+
+pub static WEBSOCKET_SESSIONS: LazyLock<Mutex<Vec<Session>>> = LazyLock::new(|| Mutex::new(vec![]));
 
 #[utoipa::path(
     tags = ["Spool"],
@@ -32,6 +36,8 @@ async fn find_spool_route(
     if is_websocket {
         let (response, mut session, mut msg_stream) = actix_ws::handle(&req, body)
             .map_err(|e| anyhow!("WebSocket handshake error: {e:?}"))?;
+
+        WEBSOCKET_SESSIONS.lock().await.push(session.clone());
 
         spawn(async move {
             while let Some(Ok(msg)) = msg_stream.next().await {

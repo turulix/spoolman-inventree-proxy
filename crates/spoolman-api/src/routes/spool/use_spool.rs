@@ -1,5 +1,6 @@
 use crate::context::Context;
-use crate::routes::spool::Spool;
+use crate::routes::spool::find_spool::WEBSOCKET_SESSIONS;
+use crate::routes::spool::{Spool, SpoolmanWebsocketMessage};
 use crate::routes::{ApiError, ApiResult};
 use actix_web::web::{Data, Json};
 use actix_web::{put, web};
@@ -80,17 +81,22 @@ async fn use_spool_route(
     let spool = Spool::from_inventree(&stock_item, &part);
     conn.commit().await?;
 
-    // ctx.inv
-    //     .stock()
-    //     .remove_create(&RemoveCreateBody {
-    //         notes: "Used via Spoolman Proxy".to_string(),
-    //         items: vec![RemoveCreateInner {
-    //             pk: stock_item.pk,
-    //             quantity: format!("{used_weight:.5}"),
-    //         }],
-    //     })
-    //     .await
-    //     .unwrap();
+    let cloned_spool = spool.clone();
+    tokio::spawn(async move {
+        let mut lock = WEBSOCKET_SESSIONS.lock().await;
+
+        let msg = serde_json::to_string(&SpoolmanWebsocketMessage {
+            event_type: "updated".to_string(),
+            date: chrono::Utc::now(),
+            resource: "spool".to_string(),
+            payload: cloned_spool,
+        })
+        .unwrap();
+
+        for session in lock.iter_mut() {
+            let _ = session.text(msg.as_str()).await;
+        }
+    });
 
     Ok(Json(spool))
 }

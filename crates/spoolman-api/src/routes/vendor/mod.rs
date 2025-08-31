@@ -8,7 +8,7 @@ pub fn configure_router(cfg: &mut ServiceConfig) {
     cfg.service(find_vendor_route);
 }
 
-#[derive(serde::Serialize, utoipa::ToSchema)]
+#[derive(serde::Serialize, utoipa::ToSchema, Clone)]
 pub struct Vendor {
     pub id: u64,
     pub registered: DateTime<chrono::Utc>,

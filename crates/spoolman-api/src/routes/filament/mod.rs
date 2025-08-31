@@ -9,7 +9,7 @@ pub fn configure_router(_cfg: &mut ServiceConfig) {
     //cfg.service(find_filament_route);
 }
 
-#[derive(Serialize, ToSchema)]
+#[derive(Serialize, ToSchema, Clone)]
 pub struct Filament {
     /// Unique internal ID of this filament type. (Part in InvenTree)
     pub id: u64,

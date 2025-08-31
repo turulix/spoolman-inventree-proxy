@@ -22,7 +22,7 @@ pub fn configure_router(cfg: &mut ServiceConfig) {
         .service(use_spool_route);
 }
 
-#[derive(Serialize, ToSchema)]
+#[derive(Serialize, ToSchema, Clone)]
 pub struct Spool {
     id: u64,
     registered: DateTime<Utc>,
@@ -121,4 +121,13 @@ impl Spool {
             extra: Default::default(),
         }
     }
+}
+
+#[derive(Serialize, ToSchema)]
+struct SpoolmanWebsocketMessage {
+    #[serde(rename = "type")]
+    pub event_type: String,
+    pub resource: String,
+    pub date: DateTime<Utc>,
+    pub payload: Spool,
 }
