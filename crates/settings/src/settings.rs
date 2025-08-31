@@ -9,6 +9,7 @@ pub struct Settings {
     pub inventree_token: String,
     pub category_id: u64,
     pub sqlite_db_path: String,
+    pub port: u16,
     pub parameters: ParameterSettings,
 }
 
@@ -18,7 +19,8 @@ impl Default for Settings {
             inventree_url: "http://localhost:8000".to_string(),
             inventree_token: "0123456789abcdef0123456789abcdef01234567".to_string(),
             category_id: 0,
-            sqlite_db_path: "sqlite://proxy_data.db".to_string(),
+            port: 8080,
+            sqlite_db_path: "sqlite://data/proxy_data.db".to_string(),
             parameters: Default::default(),
         }
     }

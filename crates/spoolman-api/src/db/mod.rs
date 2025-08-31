@@ -3,6 +3,7 @@ mod update_pending;
 use sqlx::SqlitePool;
 use sqlx::sqlite::{SqliteAutoVacuum, SqliteConnectOptions};
 use std::str::FromStr;
+use tokio::fs::create_dir_all;
 
 #[derive(Clone)]
 pub struct DbClient {
@@ -11,6 +12,9 @@ pub struct DbClient {
 
 impl DbClient {
     pub async fn new(db_url: &str) -> Self {
+        // Ensure the data directory exists
+        create_dir_all("data").await.unwrap();
+
         let options = SqliteConnectOptions::from_str(db_url)
             .unwrap()
             .auto_vacuum(SqliteAutoVacuum::Incremental)

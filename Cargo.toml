@@ -2,6 +2,7 @@
 resolver = "3"
 
 members = [
-    "crates/inventree", "crates/settings",
+    "crates/inventree",
+    "crates/settings",
     "crates/spoolman-api"
 ]

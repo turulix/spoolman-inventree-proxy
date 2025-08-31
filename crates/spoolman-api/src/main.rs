@@ -14,7 +14,8 @@ use log::{info, warn};
 use settings::SETTINGS;
 use sqlx::SqliteConnection;
 use std::fs;
-use std::net::{Ipv4Addr, Ipv6Addr, SocketAddr};
+use std::net::{Ipv4Addr, SocketAddr};
+use tokio::fs::create_dir_all;
 use utoipa_actix_web::AppExt;
 use utoipa_swagger_ui::SwaggerUi;
 
@@ -66,8 +67,8 @@ async fn main() -> anyhow::Result<()> {
         }
         app.service(SwaggerUi::new("/spec/swagger-ui/{_:.*}").url("/spec/openapi.json", api))
     })
-    .bind(SocketAddr::new(Ipv4Addr::UNSPECIFIED.into(), 4000))?
-    .bind(SocketAddr::new(Ipv6Addr::UNSPECIFIED.into(), 4000))?
+    .bind(SocketAddr::new(Ipv4Addr::UNSPECIFIED.into(), SETTINGS.port))?
+    //.bind(SocketAddr::new(Ipv6Addr::UNSPECIFIED.into(), SETTINGS.port))?
     .run()
     .await?;
 
