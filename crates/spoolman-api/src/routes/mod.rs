@@ -8,11 +8,13 @@ mod vendor;
 use crate::routes::backup::backup_route;
 use crate::routes::health::health_route;
 use crate::routes::info::info_route;
-use actix_web::HttpResponse;
 use actix_web::body::BoxBody;
 use actix_web::http::StatusCode;
+use actix_web::web::Redirect;
+use actix_web::HttpResponse;
 use anyhow::Error;
 use serde::Serialize;
+use settings::SETTINGS;
 use std::fmt::{Debug, Display, Formatter};
 use utoipa_actix_web::scope;
 use utoipa_actix_web::service_config::ServiceConfig;
@@ -26,6 +28,20 @@ pub fn configure_router(cfg: &mut ServiceConfig) {
             .configure(filament::configure_router)
             .configure(spool::configure_router)
             .configure(vendor::configure_router),
+    )
+    .route(
+        "/",
+        actix_web::web::to(|| async {
+            let base_url = SETTINGS
+                .inventree_url
+                .strip_suffix("/")
+                .unwrap_or(&SETTINGS.inventree_url);
+            Redirect::to(format!(
+                "{base_url}/web/part/category/{}/parts",
+                SETTINGS.category_id
+            ))
+            .temporary()
+        }),
     );
 }
 
