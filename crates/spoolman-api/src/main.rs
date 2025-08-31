@@ -15,7 +15,6 @@ use settings::SETTINGS;
 use sqlx::SqliteConnection;
 use std::fs;
 use std::net::{Ipv4Addr, SocketAddr};
-use tokio::fs::create_dir_all;
 use utoipa_actix_web::AppExt;
 use utoipa_swagger_ui::SwaggerUi;
 
