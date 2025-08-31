@@ -1,7 +1,7 @@
 mod update_pending;
 
-use sqlx::sqlite::{SqliteAutoVacuum, SqliteConnectOptions};
 use sqlx::SqlitePool;
+use sqlx::sqlite::{SqliteAutoVacuum, SqliteConnectOptions};
 use std::str::FromStr;
 
 #[derive(Clone)]
