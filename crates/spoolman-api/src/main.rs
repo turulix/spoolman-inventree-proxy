@@ -15,6 +15,7 @@ use settings::SETTINGS;
 use sqlx::SqliteConnection;
 use std::fs;
 use std::net::{Ipv4Addr, SocketAddr};
+use actix_web::middleware::Logger;
 use utoipa_actix_web::AppExt;
 use utoipa_swagger_ui::SwaggerUi;
 
@@ -54,6 +55,7 @@ async fn main() -> anyhow::Result<()> {
     HttpServer::new(move || {
         let (app, api) = App::new()
             .app_data(Data::new(context.clone()))
+            .wrap(Logger::default())
             .into_utoipa_app()
             .default_service(default_service)
             .configure(routes::configure_router)
