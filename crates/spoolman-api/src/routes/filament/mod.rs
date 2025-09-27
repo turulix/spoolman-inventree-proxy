@@ -48,5 +48,6 @@ pub struct Filament {
     /// Set if this filament comes from an external database. This contains the ID in the external database.
     pub external_id: Option<String>,
     /// Extra fields for this filament. All values are JSON-encoded data. Query the /fields endpoint for more details about the fields.
-    pub extras: serde_json::Value,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub extras: Option<serde_json::Value>,
 }

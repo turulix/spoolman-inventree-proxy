@@ -16,5 +16,6 @@ pub struct Vendor {
     pub comment: Option<String>,
     pub empty_spool_weight: Option<f64>,
     pub external_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub extras: Option<serde_json::Value>,
 }

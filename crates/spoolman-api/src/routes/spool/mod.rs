@@ -39,7 +39,8 @@ pub struct Spool {
     location: Option<String>,
     lot_nr: Option<String>,
     archived: bool,
-    extra: serde_json::Value,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    extra: Option<serde_json::Value>,
 }
 
 impl Spool {
@@ -106,7 +107,7 @@ impl Spool {
                 multi_color_hexes: None,
                 multi_color_direction: None,
                 external_id: part.ipn,
-                extras: Default::default(),
+                extras: None,
             },
             price: stock.purchase_price,
             remaining_weight: Some(stock.quantity),
@@ -118,7 +119,7 @@ impl Spool {
             location: stock.location_detail.map(|x| x.pathstring),
             lot_nr: stock.batch,
             archived: !part.active,
-            extra: Default::default(),
+            extra: None,
         }
     }
 }

@@ -21,6 +21,6 @@ async fn find_vendor_route() -> ApiResult<Json<Vendor>> {
         comment: None,
         empty_spool_weight: None,
         external_id: None,
-        extras: Default::default(),
+        extras: None,
     }))
 }
