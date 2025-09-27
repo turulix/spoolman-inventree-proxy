@@ -16,36 +16,50 @@ pub struct Filament {
     /// When the filament was registered in the database. UTC Timezone.
     pub registered: chrono::DateTime<chrono::Utc>,
     /// Filament name, to distinguish this filament type among others from the same vendor. Should contain its color for example.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     /// The vendor of this filament type.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub vendor: Option<Vendor>,
     /// The material of this filament, e.g. PLA.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub material: Option<String>,
     /// The price of this filament in the system configured currency.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub price: Option<f64>,
     /// The density of this filament in g/cm3.
     pub density: f64,
     /// The diameter of this filament in mm.
     pub diameter: f64,
     /// The weight of the filament in a full spool, in grams.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub weight: Option<f64>,
     /// The empty spool weight, in grams.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub spool_weight: Option<f64>,
     /// Vendor article number, e.g. EAN, QR code, etc.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub article_number: Option<String>,
     /// Free text comment about this filament type.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub comment: Option<String>,
     /// Overridden extruder temperature, in °C.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub settings_extruder_temp: Option<f64>,
     /// Overridden bed temperature, in °C.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub settings_bed_temp: Option<f64>,
     /// Hexadecimal color code of the filament, e.g. FF0000 for red. Supports alpha channel at the end. If it's a multi-color filament, the multi_color_hexes field is used instead.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub color_hex: Option<String>,
     /// Hexadecimal color code of the filament, e.g. FF0000 for red. Supports alpha channel at the end. Specifying multiple colors separated by commas. Also set the multi_color_direction field if you specify multiple colors.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub multi_color_hexes: Option<String>,
     /// Type of multi-color filament. Only set if the multi_color_hexes field is set.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub multi_color_direction: Option<Vec<String>>,
     /// Set if this filament comes from an external database. This contains the ID in the external database.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub external_id: Option<String>,
     /// Extra fields for this filament. All values are JSON-encoded data. Query the /fields endpoint for more details about the fields.
     #[serde(skip_serializing_if = "Option::is_none")]

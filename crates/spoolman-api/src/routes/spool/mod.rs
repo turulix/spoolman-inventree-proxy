@@ -26,17 +26,26 @@ pub fn configure_router(cfg: &mut ServiceConfig) {
 pub struct Spool {
     id: u64,
     registered: DateTime<Utc>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     first_used: Option<DateTime<Utc>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     last_used: Option<DateTime<Utc>>,
     filament: Filament,
+    #[serde(skip_serializing_if = "Option::is_none")]
     price: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     remaining_weight: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     initial_weight: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     spool_weight: Option<f64>,
     used_weight: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
     remaining_length: Option<f64>,
     used_length: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
     location: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     lot_nr: Option<String>,
     archived: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
